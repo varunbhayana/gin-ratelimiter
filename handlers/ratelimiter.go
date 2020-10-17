@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"fmt"
 	"time"
 
@@ -31,7 +30,7 @@ func RateLimit(c *gin.Context) {
 	}
 	defer lock.Release()
 	fmt.Println("I have a lock!")
-	value, err := client.Get(context.Background(), userId).Result()
+	value, err := client.Get(userId).Result()
 	if err == nil {
 		fmt.Println(value)
 
@@ -43,7 +42,7 @@ func RateLimit(c *gin.Context) {
 			count: 1,
 		})
 
-		client.Set(context.Background(), userId, redisValue, time.Duration(1*time.Hour)).Result()
+		client.Set(userId, redisValue, time.Duration(1*time.Hour)).Result()
 	}
 
 }
