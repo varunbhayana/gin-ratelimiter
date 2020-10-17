@@ -16,3 +16,4 @@ cert/
 # BUILD #
 ./gin-ratelimiter
 .gin-ratelimiter
+gin-ratelimiter

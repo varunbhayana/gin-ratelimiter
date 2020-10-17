@@ -7,6 +7,7 @@ import (
 	"github.com/bsm/redislock"
 	"github.com/gin-gonic/gin"
 	"github.com/varunbhayana/gin-ratelimiter/db"
+	"github.com/varunbhayana/gin-ratelimiter/service"
 )
 
 type RedisModel struct {
@@ -19,7 +20,7 @@ func RateLimit(c *gin.Context) {
 	userId := c.GetHeader("user-id")
 	client := db.GetRedis()
 
-	locker := redislock.New(client)
+	locker := service.NewRedisLock(client)
 
 	// Try to obtain lock.
 	lock, err := locker.Obtain(userId, 200*time.Millisecond, nil)
