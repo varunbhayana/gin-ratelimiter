@@ -32,7 +32,7 @@ type RedisModel struct {
 func RateLimit() func(*gin.Context) {
 	return func(c *gin.Context) {
 		cycle_util.DegdCall(
-			10*time.Second,
+			1*time.Second,
 			c,
 			func() (int, interface{}) {
 				now := time.Now()
