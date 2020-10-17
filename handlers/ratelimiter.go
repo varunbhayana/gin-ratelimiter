@@ -32,14 +32,17 @@ func RateLimit(c *gin.Context) {
 	fmt.Println("I have a lock!")
 	value, err := client.Get(c, userId).Result()
 	if err == nil {
+		fmt.Println(value)
 
 	} else {
-		redisValue := &RedisModel{
-			time:  time.Now().Unix(),
-			count: 1,
-		}
+		redisValue := make([]*RedisModel, 0)
 
-		client.Set(c, userId, redisValue)
+		redisValue = append(redisValue, &RedisModel{
+			time:  time.Now().Unix() / 60,
+			count: 1,
+		})
+
+		client.Set(c, userId, redisValue, time.Duration(1*time.Hour)).Result()
 	}
 
 }

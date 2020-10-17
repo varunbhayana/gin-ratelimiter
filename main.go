@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	uuid "github.com/twinj/uuid"
 	"github.com/varunbhayana/gin-ratelimiter/db"
+	handler "github.com/varunbhayana/gin-ratelimiter/handlers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -106,7 +107,7 @@ func main() {
 	//r.LoadHTMLGlob("./public/html/*")
 
 	//r.Static("/public", "./public")
-
+	r.GET("/rate", handler.RateLimit)
 	r.GET("/", func(c *gin.Context) {
 		c.String(200, "check")
 		// c.HTML(http.StatusOK, "index.html", gin.H{
