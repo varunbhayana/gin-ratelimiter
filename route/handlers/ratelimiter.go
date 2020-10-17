@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -30,10 +29,10 @@ type RedisModel struct {
 	Count int64 `json:"Count"`
 }
 
-func RateLimit(c *gin.Context) func(*gin.Context) {
+func RateLimit() func(*gin.Context) {
 	return func(c *gin.Context) {
 		cycle_util.DegdCall(
-			1*time.Second,
+			10*time.Second,
 			c,
 			func() (int, interface{}) {
 				now := time.Now()
@@ -62,7 +61,6 @@ func RateLimit(c *gin.Context) func(*gin.Context) {
 
 					}
 				}()
-				fmt.Println("I have a lock!")
 				value, err := client.Get(userId).Result()
 				if err == nil {
 					var redisValue map[int64]int
@@ -126,6 +124,5 @@ func setForUser(redisValue *map[int64]int, userId string, now time.Time, client 
 
 	b, _ := json.Marshal(redisValue)
 
-	ok, err := client.Set(userId, string(b), time.Duration(1*time.Hour)).Result()
-	fmt.Println(ok, err)
+	client.Set(userId, string(b), time.Duration(1*time.Hour)).Result()
 }

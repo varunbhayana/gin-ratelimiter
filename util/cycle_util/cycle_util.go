@@ -9,27 +9,40 @@ import (
 )
 
 func DegdCall(to time.Duration, c *gin.Context, action func() (int, interface{})) {
-	adone := make(chan bool, 1)
+	adone := make(chan *string, 1)
 	var status int
 	var res interface{}
 
 	go func() {
 		defer func() {
+			var errorString string
+
 			if e := recover(); e != nil {
 				fmt.Println(e)
-				adone <- true
+				switch val := e.(type) {
+				case error:
+					errorString = val.Error()
+				case string:
+					errorString = val
+				default:
+					errorString = "error in routing"
+				}
+				adone <- &errorString
 			} else {
-				adone <- false
+				adone <- nil
 			}
 		}()
 
 		status, res = action()
+		fmt.Println("status", status, res)
 	}()
 
 	select {
 	case e := <-adone:
-		if e {
-			panic(errors.New(enum.ERR_ROUTE_PANIC))
+		if e != nil {
+			c.String(500, *e)
+			return
+			///panic(errors.New("error route panic"))
 		} else {
 			if s, ok := res.(string); ok {
 				c.String(status, s)
@@ -38,6 +51,6 @@ func DegdCall(to time.Duration, c *gin.Context, action func() (int, interface{})
 			}
 		}
 	case <-time.After(to):
-		panic(errors.New(enum.ERR_ROUTE_TIMEOUT))
+		panic(errors.New("error route timeout"))
 	}
 }
