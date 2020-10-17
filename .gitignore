@@ -17,3 +17,5 @@ cert/
 ./gin-ratelimiter
 .gin-ratelimiter
 gin-ratelimiter
+
+__debug_bin
