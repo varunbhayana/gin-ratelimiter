@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	_redis "github.com/go-redis/redis"
@@ -13,6 +15,16 @@ import (
 	"github.com/varunbhayana/gin-ratelimiter/db"
 	"github.com/varunbhayana/gin-ratelimiter/service"
 )
+
+var MAX_MINUTE int
+
+var MAX_HOUR int
+
+func init() {
+	MAX_MINUTE, _ = strconv.Atoi(os.Getenv("MAX_MINUTE"))
+	MAX_HOUR, _ = strconv.Atoi(os.Getenv("MAX_HOUR"))
+
+}
 
 type RedisModel struct {
 	Time  int64 `json:"Time"`
@@ -43,7 +55,7 @@ func RateLimit(c *gin.Context) {
 	fmt.Println("I have a lock!")
 	value, err := client.Get(userId).Result()
 	if err == nil {
-		var redisValue map[int64]int64
+		var redisValue map[int64]int
 		if err := json.Unmarshal([]byte(value), &redisValue); err != nil {
 			panic(err)
 		}
@@ -56,18 +68,18 @@ func RateLimit(c *gin.Context) {
 		}
 		return
 	} else {
-		setForUser(&map[int64]int64{}, userId, now, client)
+		setForUser(&map[int64]int{}, userId, now, client)
 		c.String(200, "ok")
 		return
 	}
 
 }
 
-func validate(user *map[int64]int64, now time.Time) bool {
+func validate(user *map[int64]int, now time.Time) bool {
 
 	after := now.Add(-1*time.Hour).Unix() / 60
 
-	total := int64(0)
+	total := 0
 	for k, v := range *user {
 		if k < after {
 			delete(*user, k)
@@ -76,13 +88,13 @@ func validate(user *map[int64]int64, now time.Time) bool {
 		}
 	}
 	// in 1 hour max 1k request
-	if total+1 > 1000 {
+	if total+1 > MAX_HOUR {
 		return false
 	}
 
 	minute := now.Unix() / 60
 	if val, ok := (*user)[minute]; ok {
-		if val >= 3 {
+		if val >= MAX_MINUTE {
 			return false
 		} else {
 			return true
@@ -91,7 +103,7 @@ func validate(user *map[int64]int64, now time.Time) bool {
 	return true
 }
 
-func setForUser(redisValue *map[int64]int64, userId string, now time.Time, client *_redis.Client) {
+func setForUser(redisValue *map[int64]int, userId string, now time.Time, client *_redis.Client) {
 	key := now.Unix() / 60
 	if val, ok := (*redisValue)[key]; ok {
 		(*redisValue)[key] = val + 1

@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${fileDirname}/../main.go",
-            "env":{"PORT":"8888"}
+            "env":{"PORT":"8888","MAX_MINUTE":10,"MAX_HOUR":1000}
         }
     ]
 }
