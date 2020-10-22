@@ -53,7 +53,7 @@ func (limiter *ratelimiter) RateLimit(userId string, applicationId string) (int,
 
 		}
 	}()
-	value, err := client.Get(userId).Result()
+	value, err := client.Get(getRateLimitingKey(userId, applicationId)).Result()
 	if err == nil {
 		var redisValue map[int64]int
 		if err := json.Unmarshal([]byte(value), &redisValue); err != nil {
