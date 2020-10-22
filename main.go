@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	uuid "github.com/twinj/uuid"
 	"github.com/varunbhayana/gin-ratelimiter/route"
 
@@ -37,17 +35,10 @@ func main() {
 
 	//Start the default gin server
 	r := gin.Default()
-	route.Settle(r)
 
 	//Load the .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file, please create one in the root directory")
-	}
 
-	// r.NoRoute(func(c *gin.Context) {
-	// 	c.HTML(404, "404.html", gin.H{})
-	// })
+	route.Settle(r)
 
 	fmt.Println("SSL", os.Getenv("SSL"))
 	port := os.Getenv("PORT")
