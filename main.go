@@ -5,7 +5,7 @@ import (
 	"os"
 
 	uuid "github.com/twinj/uuid"
-	"github.com/varunbhayana/gin-ratelimiter/route"
+	"github.com/varunbhayana/rate-limiting/route"
 
 	"github.com/gin-gonic/gin"
 )

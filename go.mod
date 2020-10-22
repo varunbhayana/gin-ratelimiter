@@ -1,4 +1,4 @@
-module github.com/varunbhayana/gin-ratelimiter
+module github.com/varunbhayana/rate-limiting
 
 go 1.14
 

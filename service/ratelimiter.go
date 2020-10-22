@@ -8,8 +8,8 @@ import (
 
 	"github.com/bsm/redislock"
 	_redis "github.com/go-redis/redis"
-	"github.com/varunbhayana/gin-ratelimiter/db"
-	"github.com/varunbhayana/gin-ratelimiter/enum"
+	"github.com/varunbhayana/rate-limiting/db"
+	"github.com/varunbhayana/rate-limiting/enum"
 )
 
 type ratelimiter struct{}

@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	"github.com/varunbhayana/gin-ratelimiter/db"
-	handler "github.com/varunbhayana/gin-ratelimiter/route/handlers"
+	"github.com/varunbhayana/rate-limiting/db"
+	handler "github.com/varunbhayana/rate-limiting/route/handlers"
 )
 
 //CORSMiddleware ...

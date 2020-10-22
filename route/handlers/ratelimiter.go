@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/varunbhayana/gin-ratelimiter/service"
-	"github.com/varunbhayana/gin-ratelimiter/util/cycle_util"
+	"github.com/varunbhayana/rate-limiting/service"
+	"github.com/varunbhayana/rate-limiting/util/cycle_util"
 )
 
 type RedisModel struct {

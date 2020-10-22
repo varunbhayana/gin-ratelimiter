@@ -14,8 +14,8 @@
 cert/
 
 # BUILD #
-./gin-ratelimiter
-.gin-ratelimiter
-gin-ratelimiter
+./rate-limiting
+.rate-limiting
+rate-limiting
 
 __debug_bin
