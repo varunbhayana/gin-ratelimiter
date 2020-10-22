@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -26,13 +27,13 @@ func init() {
 
 }
 
-func (limiter *ratelimiter) RateLimit(userId string) (int, string) {
+func (limiter *ratelimiter) RateLimit(userId string, applicationId string) (int, string) {
 	now := time.Now()
 	client := db.GetRedis()
 
 	locker := NewRedisLock(client)
 
-	lock, err := locker.Obtain(userId+enum.REDIS_LOCK_SUFFIX, 100*time.Millisecond, &Options{
+	lock, err := locker.Obtain(getLockKey(userId, applicationId), 100*time.Millisecond, &Options{
 		Context:       client.Context(),
 		Metadata:      "_lock",
 		RetryStrategy: LinearBackoff(60 * time.Millisecond),
@@ -59,14 +60,14 @@ func (limiter *ratelimiter) RateLimit(userId string) (int, string) {
 			panic(err)
 		}
 		if rateInLimit(&redisValue, now) {
-			incrementRequestCount(&redisValue, userId, now, client)
+			incrementRequestCount(&redisValue, userId, applicationId, now, client)
 			return 200, "ok"
 		} else {
 			// too many request response
 			return 429, "too many requests"
 		}
 	} else {
-		incrementRequestCount(&map[int64]int{}, userId, now, client)
+		incrementRequestCount(&map[int64]int{}, userId, applicationId, now, client)
 		return 200, "ok"
 
 	}
@@ -100,7 +101,7 @@ func rateInLimit(user *map[int64]int, now time.Time) bool {
 	return true
 }
 
-func incrementRequestCount(redisValue *map[int64]int, userId string, now time.Time, client *_redis.Client) {
+func incrementRequestCount(redisValue *map[int64]int, userId, applicationId string, now time.Time, client *_redis.Client) {
 	key := now.Unix() / 60
 	if val, ok := (*redisValue)[key]; ok {
 		(*redisValue)[key] = val + 1
@@ -111,5 +112,13 @@ func incrementRequestCount(redisValue *map[int64]int, userId string, now time.Ti
 
 	b, _ := json.Marshal(redisValue)
 
-	client.Set(userId, string(b), time.Duration(1*time.Hour)).Result()
+	client.Set(getRateLimitingKey(userId, applicationId), string(b), time.Duration(1*time.Hour)).Result()
+}
+
+func getLockKey(userId, applicationid string) string {
+	return fmt.Sprintf("%s:%s:%s", userId, applicationid, enum.REDIS_LOCK_SUFFIX)
+}
+
+func getRateLimitingKey(userId, applicationid string) string {
+	return fmt.Sprintf("%s:%s", userId, applicationid)
 }

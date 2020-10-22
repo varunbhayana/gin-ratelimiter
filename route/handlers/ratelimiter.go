@@ -20,11 +20,12 @@ func RateLimit() func(*gin.Context) {
 			c,
 			func() (int, interface{}) {
 				userId := c.GetHeader("user-id")
-				if userId == "" {
+				applicationId := c.GetHeader("application-id")
+				if userId == "" || applicationId == "" {
 					return 400, "Bad Request"
 				}
 
-				return service.RateLimiter.RateLimit(userId)
+				return service.RateLimiter.RateLimit(userId, applicationId)
 			},
 		)
 	}
