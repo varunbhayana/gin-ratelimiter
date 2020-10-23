@@ -25,3 +25,7 @@ Design a rate limiting application or API.
 
 - The API **must** support multiple users and multiple application support.
 - If the HTTP status **200** means user is allowed to make call on respective application, http status should **429** when user exceeds the request for the given application.
+- The API should be stateless so that it can be horizontaly scaled up easily.
+- API should support sliding window approach ex user should have limit on request in a minute as well as an hour. All the parameter like number of requests should configurable from env file.
+
+
