@@ -3,11 +3,11 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/bsm/redislock"
 	_redis "github.com/go-redis/redis"
+	"github.com/varunbhayana/rate-limiting/conf"
 	"github.com/varunbhayana/rate-limiting/db"
 	"github.com/varunbhayana/rate-limiting/enum"
 )
@@ -22,8 +22,8 @@ var MAX_MINUTE int
 var MAX_HOUR int
 
 func init() {
-	MAX_MINUTE, _ = strconv.Atoi(enum.ReadEnv("MAX_MINUTE"))
-	MAX_HOUR, _ = strconv.Atoi(enum.ReadEnv("MAX_HOUR"))
+	MAX_MINUTE = conf.D.MAX_MINUTE
+	MAX_HOUR = conf.D.MAX_HOUR
 
 }
 

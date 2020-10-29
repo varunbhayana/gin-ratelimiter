@@ -19,3 +19,4 @@ cert/
 rate-limiting
 
 __debug_bin
+conf/conf.json

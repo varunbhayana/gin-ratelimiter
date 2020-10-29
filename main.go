@@ -5,6 +5,7 @@ import (
 	"os"
 
 	uuid "github.com/twinj/uuid"
+	"github.com/varunbhayana/rate-limiting/conf"
 	"github.com/varunbhayana/rate-limiting/route"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +42,7 @@ func main() {
 	route.Settle(r)
 
 	fmt.Println("SSL", os.Getenv("SSL"))
-	port := os.Getenv("PORT")
+	port := conf.D.Port
 
 	if os.Getenv("ENV") == "PRODUCTION" {
 		gin.SetMode(gin.ReleaseMode)
