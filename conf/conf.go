@@ -7,10 +7,12 @@ import (
 
 // parse from conf.json
 type confjson struct {
-	IsProd     bool
-	Port       string
-	MAX_MINUTE int
-	MAX_HOUR   int
+	IsProd         bool
+	Port           string
+	MAX_MINUTE     int
+	MAX_HOUR       int
+	REDIS_HOST     string
+	REDIS_PASSWORD string
 }
 
 const (

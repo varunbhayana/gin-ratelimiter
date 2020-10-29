@@ -1,0 +1,9 @@
+{
+    
+    "IsProd":false,
+    "Port":"8080",
+    "MAX_MINUTE":10,
+    "MAX_HOUR":100000,
+    "REDIS_HOST":"localhost:6379",
+    "REDIS_PASSWORD":""
+}
