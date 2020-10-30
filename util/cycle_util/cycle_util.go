@@ -18,7 +18,7 @@ func DegdCall(to time.Duration, c *gin.Context, action func() (int, interface{})
 			var errorString string
 
 			if e := recover(); e != nil {
-				fmt.Println(e)
+				fmt.Println("e in defer", e)
 				switch val := e.(type) {
 				case error:
 					errorString = val.Error()
