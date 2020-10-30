@@ -1,6 +1,7 @@
 package cycle_util
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -52,8 +53,9 @@ func DegdCall(to time.Duration, c *gin.Context, action func() (int, interface{})
 			}
 		}
 	case <-time.After(to):
-		c.String(500, "error route timeout")
-		return
+		e := "error route timeout"
+		c.String(500, e)
+		panic(errors.New(e))
 
 	}
 }
