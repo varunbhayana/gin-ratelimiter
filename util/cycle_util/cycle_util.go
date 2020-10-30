@@ -39,6 +39,8 @@ func DegdCall(to time.Duration, c *gin.Context, action func() (int, interface{})
 
 	select {
 	case e := <-adone:
+		fmt.Println("e", status, res)
+
 		if e != nil {
 			c.String(500, *e)
 			return
