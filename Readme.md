@@ -9,6 +9,8 @@ Given
 -----
 
 You are given an external API endpoint which allows to check that given user-id does have the limit for the request on the given application or not.
+Appliaction is also deployed on ec2 with redis-elastic cache.
+
 
 Example HTTP calls
 
